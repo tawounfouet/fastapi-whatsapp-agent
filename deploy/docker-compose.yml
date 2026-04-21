@@ -1,0 +1,32 @@
+name: whatsapp_agent
+
+networks:
+  shared_network:
+    external: true
+
+services:
+  whatsapp-agent:
+    image: ghcr.io/tawounfouet/fastapi-whatsapp-agent/whatsapp-agent:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: whatsapp_agent
+    env_file:
+      - .env
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - shared_network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+        tag: "whatsapp_agent"
