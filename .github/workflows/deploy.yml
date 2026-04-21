@@ -81,8 +81,8 @@ jobs:
             set -e
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             cd /opt/apps/whatsapp
-            docker compose -f deploy/docker-compose.yml pull whatsapp-agent
-            docker compose -f deploy/docker-compose.yml up -d --force-recreate whatsapp-agent
+            docker compose --project-directory /opt/apps/whatsapp -f deploy/docker-compose.yml pull whatsapp-agent
+            docker compose --project-directory /opt/apps/whatsapp -f deploy/docker-compose.yml up -d --force-recreate whatsapp-agent
 
             # Healthcheck loop (3 min max)
             for i in $(seq 1 18); do
